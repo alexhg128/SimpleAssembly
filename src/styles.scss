@@ -1,0 +1,28 @@
+
+body {
+    margin: 0;
+    font-family: 'Roboto';
+    font-weight: 300;
+    overflow: hidden;
+}
+
+.mat-toolbar-row, .mat-toolbar-single-row {
+    height: 10vh !important;
+    padding: 0 !important;
+}
+
+.tabs .tab a:focus, .tabs .tab a:focus.active {
+    background-color: #c436ef1a;
+}
+
+.tabs .tab a:hover, .tabs .tab a.active {
+    color: #e17dff;
+}
+
+.tabs .tab a {
+    color: #c436ef;
+}
+
+.tabs .indicator {
+    background-color: #c436ef;
+}
