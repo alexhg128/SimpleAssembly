@@ -8,6 +8,8 @@ export default class Computer {
     Processor:Processor;
     Memory:Memory;
 
+    Interrupts: number[] = [];
+
     private constructor() {
 
         this.Memory = new Memory(/* 32 GB */);
@@ -31,12 +33,18 @@ export default class Computer {
 
     step() {
         this.last_is_step = true;
+        if(this.Interrupts.includes(this.Processor.Registers.ProgramCounter)) {
+            this.Processor.interrupt();
+        }
         this.Processor.run();
     }
 
     run() {
         this.last_is_step = false;
         while(this.Processor.Enabled && !this.Processor.Locked) {
+            if(this.Interrupts.includes(this.Processor.Registers.ProgramCounter)) {
+                this.Processor.interrupt();
+            }
             this.Processor.run();
         }
     }
