@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import Computer from '../models/computer';
 
 class Mailbox {
   id:number;
@@ -23,6 +24,12 @@ export class PanelComponent implements OnInit {
       m.content = 0;
       this.mailboxes.push(m);
     }
+
+    Computer.Instance.Memory.MemoryState.subscribe((data:number[]) => {
+      for(var i = 0; i < data.length; i++) {
+        this.mailboxes[i].content = data[i];
+      }
+    });
 
    }
 
