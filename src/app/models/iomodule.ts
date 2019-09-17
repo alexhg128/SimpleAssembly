@@ -23,7 +23,7 @@ export default class IOModule {
     }
 
     output(val:number) {
-        this.OutStream
+        this.OutStream.next(val);
     }
 
     requestInput() {
@@ -41,7 +41,7 @@ export default class IOModule {
     }
 
     interrupt(val:number) {
-        Computer.Instance.Processor.Registers.Accumulator = val;
+        Computer.Instance.Processor.Registers.ProgramCounter = val;
         Computer.Instance.Processor.Locked = false;
         //Computer.Instance.continue();
     }

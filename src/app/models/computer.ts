@@ -35,6 +35,10 @@ export default class Computer {
         this.last_is_step = true;
         if(this.Interrupts.includes(this.Processor.Registers.ProgramCounter)) {
             this.Processor.interrupt();
+            var index = this.Interrupts.indexOf(this.Processor.Registers.ProgramCounter);
+            if (index > -1) {
+            this.Interrupts.splice(index, 1);
+            }
         }
         if(this.Processor.Enabled && !this.Processor.Locked) {
 

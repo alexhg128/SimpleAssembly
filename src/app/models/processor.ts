@@ -35,6 +35,7 @@ export default class Processor {
         this.Registers.ProgramStatusWord.ZeroFlag = true;
         this.Registers.ProgramStatusWord.InterruptFlag = false;
         this.Enabled = true;
+        this.Locked = false;
         this.ProcessorState.next(this.Registers);
     }
 
@@ -43,6 +44,9 @@ export default class Processor {
     }
 
     run() {
+        if(this.Locked || !this.Enabled) {
+            return;
+        }
         this.Status.next(ProcessorStatus.FETCHING);
         this.Registers.InstructionRegister = this.fetch();
         if(this.Registers.ProgramStatusWord.InterruptFlag) {
@@ -50,8 +54,8 @@ export default class Processor {
             IOModule.Instance.requestInterrupt();
             var backup = new Registers();
             backup.Accumulator = this.Registers.Accumulator;
-            backup.InstructionRegister = this.Registers.Accumulator;
-            backup.ProgramCounter = this.Registers.Accumulator;
+            backup.InstructionRegister = this.Registers.InstructionRegister;
+            backup.ProgramCounter = this.Registers.ProgramCounter;
             backup.ProgramStatusWord = this.Registers.ProgramStatusWord;
             backup.ProgramStatusWord.InterruptFlag = false;
             this.RegistersStack.push(backup);
@@ -60,6 +64,8 @@ export default class Processor {
             this.Locked = true;
             this.ProcessorState.next(this.Registers);
             this.Status.next(ProcessorStatus.WAITING);
+            this.ProcessorState.next(this.Registers);
+            this.ProcessorStack.next(this.RegistersStack);
             return;
         }
         this.execute();
@@ -115,6 +121,8 @@ export default class Processor {
                 if(instruction >= 100 && instruction < 200) {
                     // ADD
                     var temp = this.Memory.read(instruction - 100);
+                    console.log(temp);
+                    
                     this.Registers.Accumulator += temp;
                 }
                 else if(instruction >= 200 && instruction < 300) {

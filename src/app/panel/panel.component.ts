@@ -8,6 +8,8 @@ import Compiler from '../models/compiler';
 import CodeLoader from '../models/codeloader';
 import BootLoader from '../models/bootloader';
 
+declare var M:any;
+
 class Mailbox {
   id:number;
   content:number;
@@ -26,7 +28,7 @@ export class PanelComponent implements OnInit {
   mailboxes: Mailbox[] = [];
   ac:number = 1;
   input:number = 0;
-  output:number = 0;
+  output:string = "";
   int:number = 0;
 
   constructor() {
@@ -60,19 +62,28 @@ export class PanelComponent implements OnInit {
     });
 
     IOModule.Instance.InStream.subscribe((data:boolean) => {
-
+      var instance = M.Modal.getInstance(document.getElementById("input"));
+      instance.open();
     });
 
     IOModule.Instance.OutStream.subscribe((data:number) => {
-
+      this.output += data + "\n";
+      var instance = M.Modal.getInstance(document.getElementById("output"));
+      instance.open();
     });
 
     IOModule.Instance.InterruptStream.subscribe((data:boolean) => {
-
+      var instance = M.Modal.getInstance(document.getElementById("interrupt"));
+      instance.open();
     });
    }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems, {});
   }
 
   mailboxChange(id: number) {
@@ -115,13 +126,24 @@ export class PanelComponent implements OnInit {
     var exe = Compiler.Instance.Compile(CodeLoader.Instance.code);
     console.log("Loading");
     if(exe.error) {
-      console.log("error");
+      var instance = M.Modal.getInstance(document.getElementById("error"));
+      instance.open();
     }
     BootLoader.Instance.Load(exe);
   }
 
   reset() {
     Computer.Instance.Processor.reset();
+    this.output = "";
+  }
+
+  sendInput() {
+    IOModule.Instance.input(this.input);
+  }
+
+  sendInterrupt() {
+    IOModule.Instance.interrupt(this.int);
+
   }
 
 }

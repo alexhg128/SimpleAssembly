@@ -101,12 +101,50 @@
     <div class="row" style="padding: 20px;">
 
         <div class="col s1" *ngFor="let m of mailboxes" style="margin: 5px; border-radius: 10px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
-            <p style="margin-bottom: 0;">{{ m.id }}</p><input type="number" [(ngModel)]="mailboxes[m.id].content" style="margin: 0;" (change)="this.mailboxChange()">
+            <p style="margin-bottom: 0;">{{ m.id }}</p><input type="number" [(ngModel)]="mailboxes[m.id].content" style="margin: 0;" (change)="this.mailboxChange(m.id)">
         </div>
     
     </div>
 </div>
 
+<div id="input" class="modal">
+    <div class="modal-content">
+      <h4>Please enter a number</h4>
+      <input type="number" id="in" [(ngModel)]="input">
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat" (click)="sendInput()">Enter</a>
+    </div>
+  </div>
+
+  <div id="output" class="modal">
+    <div class="modal-content" data-simplebar>
+      <h4>Output >_</h4>
+      <pre style="font-size: 1.8rem;">{{output}}</pre>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+  </div>
+
+  <div id="interrupt" class="modal">
+    <div class="modal-content">
+      <h4>Please enter interrupt handler location</h4>
+      <input type="number" id="in2" [(ngModel)]="int">
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat" (click)="this.sendInterrupt()">Enter</a>
+    </div>
+  </div>
+
+  <div id="error" class="modal">
+    <div class="modal-content" data-simplebar>
+      <h4>Ha ocurrido un error al compilar</h4>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+  </div>
 
 
 
