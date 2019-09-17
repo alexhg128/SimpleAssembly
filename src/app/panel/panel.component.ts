@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
+class Mailbox {
+  id:number;
+  content:number;
+}
+
 @Component({
   selector: 'app-panel',
   templateUrl: './panel.component.html',
@@ -7,7 +12,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PanelComponent implements OnInit {
 
-  constructor() { }
+  mailboxes: Mailbox[] = [];
+  ac:number = 1;
+
+  constructor() {
+
+    for(var i = 0; i < 100; i++) {
+      var m = new Mailbox();
+      m.id = i;
+      m.content = 0;
+      this.mailboxes.push(m);
+    }
+
+   }
 
   ngOnInit() {
   }
