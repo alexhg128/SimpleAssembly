@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import Computer from '../models/computer';
+import Registers from '../models/registers';
+import { ProcessorStatus } from '../models/processor';
+import IOModule from '../models/iomodule';
+import { Data } from '@angular/router';
 
 class Mailbox {
   id:number;
@@ -13,6 +17,9 @@ class Mailbox {
 })
 export class PanelComponent implements OnInit {
 
+  reg: Registers;
+  regstack: Registers[]; 
+  stat: ProcessorStatus;
   mailboxes: Mailbox[] = [];
   ac:number = 1;
 
@@ -31,6 +38,29 @@ export class PanelComponent implements OnInit {
       }
     });
 
+    Computer.Instance.Processor.ProcessorState.subscribe((data:Registers) => {
+      this.reg = data;
+    });
+
+    Computer.Instance.Processor.ProcessorStack.subscribe((data:Registers[]) => {
+      this.regstack = data;
+    });
+    
+    Computer.Instance.Processor.Status.subscribe((data:ProcessorStatus) => {
+      this.stat = data;
+    });
+
+    IOModule.Instance.InStream.subscribe((data:boolean) => {
+
+    });
+
+    IOModule.Instance.OutStream.subscribe((data:number) => {
+
+    });
+
+    IOModule.Instance.InterruptStream.subscribe((data:boolean) => {
+
+    });
    }
 
   ngOnInit() {
