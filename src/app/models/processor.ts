@@ -16,6 +16,9 @@ export default class Processor {
     Locked:boolean;
 
     constructor(bus:Memory) {
+        this.ProcessorState = new Subject<Registers>();
+        this.ProcessorStack = new Subject<Registers[]>();
+        this.Status = new Subject<ProcessorStatus>();
         this.Registers = new Registers();
         this.Memory = bus;
         this.Enabled = true;

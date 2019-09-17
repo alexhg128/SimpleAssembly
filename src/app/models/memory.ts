@@ -25,6 +25,7 @@ export default class Memory {
 
     replace(slots:number[]) {
         this.Slots = slots;
+        this.MemoryState.next(this.Slots);
     }
 
 }

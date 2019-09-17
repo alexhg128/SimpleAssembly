@@ -4,6 +4,9 @@ import Registers from '../models/registers';
 import { ProcessorStatus } from '../models/processor';
 import IOModule from '../models/iomodule';
 import { Data } from '@angular/router';
+import Compiler from '../models/compiler';
+import CodeLoader from '../models/codeloader';
+import BootLoader from '../models/bootloader';
 
 class Mailbox {
   id:number;
@@ -19,9 +22,12 @@ export class PanelComponent implements OnInit {
 
   reg: Registers;
   regstack: Registers[]; 
-  stat: ProcessorStatus;
+  stat: ProcessorStatus = ProcessorStatus.IDLE;
   mailboxes: Mailbox[] = [];
   ac:number = 1;
+  input:number = 0;
+  output:number = 0;
+  int:number = 0;
 
   constructor() {
 
@@ -31,6 +37,9 @@ export class PanelComponent implements OnInit {
       m.content = 0;
       this.mailboxes.push(m);
     }
+
+    this.reg = Computer.Instance.Processor.Registers;
+    this.regstack = Computer.Instance.Processor.RegistersStack;
 
     Computer.Instance.Memory.MemoryState.subscribe((data:number[]) => {
       for(var i = 0; i < data.length; i++) {
@@ -64,6 +73,55 @@ export class PanelComponent implements OnInit {
    }
 
   ngOnInit() {
+  }
+
+  mailboxChange(id: number) {
+    var x = [] as number[];
+    for(var i = 0; i < 100; i++) {
+      x.push(this.mailboxes[i].content);
+    }
+    Computer.Instance.Memory.replace(x);
+  }
+
+  getStatusText(s: ProcessorStatus) {
+    switch(s) {
+      case ProcessorStatus.IDLE:
+        return "IDLE";
+        break;
+      case ProcessorStatus.EXECUTING:
+        return "EXECUTING";
+        break;
+      case ProcessorStatus.FETCHING:
+        return "FETCHING";
+        break;
+      case ProcessorStatus.WAITING:
+        return "WAITING";
+    }
+  }
+
+  interrupt() {
+    Computer.Instance.Processor.interrupt();
+  }
+
+  run() {
+    Computer.Instance.run();
+  }
+
+  step() {
+    Computer.Instance.step();
+  }
+
+  load() {
+    var exe = Compiler.Instance.Compile(CodeLoader.Instance.code);
+    console.log("Loading");
+    if(exe.error) {
+      console.log("error");
+    }
+    BootLoader.Instance.Load(exe);
+  }
+
+  reset() {
+    Computer.Instance.Processor.reset();
   }
 
 }

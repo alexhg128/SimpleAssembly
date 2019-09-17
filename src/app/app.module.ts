@@ -19,6 +19,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { AceModule } from 'ngx-ace-wrapper';
 import { ACE_CONFIG } from 'ngx-ace-wrapper';
 import { AceConfigInterface } from 'ngx-ace-wrapper';
+import { FormsModule } from '@angular/forms';
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {
   fontSize: 16
@@ -44,7 +45,8 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {
     MatGridListModule,
     MatCardModule,
     MatTabsModule,
-    AceModule
+    AceModule,
+    FormsModule
   ],
   providers: [
     {

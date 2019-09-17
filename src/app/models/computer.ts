@@ -36,7 +36,10 @@ export default class Computer {
         if(this.Interrupts.includes(this.Processor.Registers.ProgramCounter)) {
             this.Processor.interrupt();
         }
-        this.Processor.run();
+        if(this.Processor.Enabled && !this.Processor.Locked) {
+
+            this.Processor.run();
+        }
     }
 
     run() {

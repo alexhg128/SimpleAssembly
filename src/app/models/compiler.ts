@@ -19,6 +19,9 @@ export default class Compiler {
     interrupt: number[] = [];
 
     Spawn() {
+        this.code = [];
+        this.codeIndex = 0;
+        this.interrupt = [];
         for(var i = 0; i < 100; i++) {
             this.code.push(0);
         }
@@ -64,6 +67,7 @@ export default class Compiler {
     codeIndex: number = 0;
 
     ProcessCode(line:string) : boolean {
+        console.log(line);
         var components = line.split(" ");
         if(components.length == 1) {
             if(components[0].toLowerCase() == "in") {
@@ -150,11 +154,12 @@ export default class Compiler {
     }
 
     Compile(code:string) : Executable {
+        console.log("here");
         this.Spawn();
         var lines = code.split("\n");
         var mode = Mode.NULL;
         for(var i = 0; i < lines.length; i++) {
-            if(lines[i] == "\n") {
+            if(lines[i] == "") {
                 continue;
             }
             if(lines[i].toLowerCase().trim() == "data:") {
