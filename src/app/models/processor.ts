@@ -36,7 +36,9 @@ export default class Processor {
         this.Registers.ProgramStatusWord.InterruptFlag = false;
         this.Enabled = true;
         this.Locked = false;
+        this.RegistersStack = [];
         this.ProcessorState.next(this.Registers);
+        this.ProcessorStack.next(this.RegistersStack);
     }
 
     interrupt() {
@@ -80,14 +82,14 @@ export default class Processor {
             this.Registers.ProgramStatusWord.ZeroFlag = true;
         }
         else {
-            this.Registers.ProgramStatusWord.ZeroFlag = true;
+            this.Registers.ProgramStatusWord.ZeroFlag = false;
         }
 
         if(this.Registers.Accumulator >= 0) {
             this.Registers.ProgramStatusWord.PositiveFlag = true;
         }
         else {
-            this.Registers.ProgramStatusWord.PositiveFlag = true;
+            this.Registers.ProgramStatusWord.PositiveFlag = false;
         }
         this.Registers.ProgramStatusWord.InterruptFlag = false;
     }
@@ -111,6 +113,7 @@ export default class Processor {
                 // INTERRUPT HANDLER EXIT
                 var backup = this.RegistersStack.shift();
                 this.Registers = backup;
+                this.Registers.ProgramCounter--;
                 this.Status.next(ProcessorStatus.IDLE);
                 break;
             case 0:
@@ -149,20 +152,20 @@ export default class Processor {
                 else if(instruction >= 600 && instruction < 700) {
                     // B
                     var temp = instruction - 600;
-                    this.Registers.ProgramCounter = temp;
+                    this.Registers.ProgramCounter = temp - 1;
                 }
                 else if(instruction >= 700 && instruction < 800) {
                     // BZ
                     if(this.Registers.ProgramStatusWord.ZeroFlag) {
                         var temp = instruction - 700;
-                        this.Registers.ProgramCounter = temp;
+                        this.Registers.ProgramCounter = temp - 1;
                     }
                 }
-                else if(instruction >= 800 && instruction < 800) {
+                else if(instruction >= 800 && instruction < 900) {
                     // BP
-                    if(this.Registers.ProgramStatusWord.ZeroFlag) {
-                        var temp = instruction - 700;
-                        this.Registers.ProgramCounter = temp;
+                    if(this.Registers.ProgramStatusWord.PositiveFlag) {
+                        var temp = instruction - 800;
+                        this.Registers.ProgramCounter = temp - 1;
                     }
                 }
                 this.Status.next(ProcessorStatus.IDLE);
